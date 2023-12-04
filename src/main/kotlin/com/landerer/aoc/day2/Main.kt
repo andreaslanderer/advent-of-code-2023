@@ -7,9 +7,13 @@ fun main() {
         "Test" to "day_02_game_results_small.txt",
         "Exercise" to "day_02_game_results_large.txt")
     for ((name, file) in files) {
-        val game = readFileAsLines(file)
+        val historicGames = readFileAsLines(file)
         val config = GameConfiguration(14, 13, 12)
-        val sumOfValidGames = Game(config, game).getSumOfValidGameIds()
+        val game = Game(config, historicGames)
+        val sumOfValidGames = game.getSumOfValidGameIds()
+        val power = game.getPowerOfMinimumSets()
         println("$name: The sum of all valid games is: $sumOfValidGames")
+        println("$name: The sum of all powers is: $power")
+
     }
 }

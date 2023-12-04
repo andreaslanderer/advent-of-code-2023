@@ -1,13 +1,14 @@
 package com.landerer.aoc.day2
 
-import java.awt.Color.blue
-import java.awt.Color.green
-import java.awt.Color.red
-
 class Game(private val configuration: GameConfiguration,
            private val history: List<String>) {
 
-    fun getValidGameIds(): List<Int> {
+    fun getSumOfValidGameIds(): Int {
+        val validGameIds = this.getValidGameIds()
+        return validGameIds.fold(0) { a, b -> a + b}
+    }
+
+    private fun getValidGameIds(): List<Int> {
         val ids = mutableListOf<Int>()
         for (prevGame in history) {
             val record = parseGameRecord(prevGame)
@@ -24,9 +25,23 @@ class Game(private val configuration: GameConfiguration,
         return ids
     }
 
-    fun getSumOfValidGameIds(): Int {
-        val validGameIds = this.getValidGameIds()
-        return validGameIds.fold(0) { a, b -> a + b}
+    fun getPowerOfMinimumSets(): Int {
+        val minimumSets = getMinimumSetOfCubesPerGame()
+        var sum = 0
+        for (result in minimumSets) {
+            var power = 1
+            power *= if (result.blue > 0) result.blue else 1
+            power *= if (result.green > 0) result.green else 1
+            power *= if (result.red > 0) result.red else 1
+            sum += power
+        }
+        return sum
+    }
+
+    private fun getMinimumSetOfCubesPerGame(): List<GameResult> {
+        return history
+            .map(this::parseGameRecord)
+            .map(this::getMinimumSetOfCubes)
     }
 
     private fun isGameInvalid(result: GameResult): Boolean {
@@ -63,6 +78,24 @@ class Game(private val configuration: GameConfiguration,
             }
         }
         return GameResult(blue,green,red)
+    }
+
+    private fun getMinimumSetOfCubes(record: GameRecord): GameResult {
+        var minBlue = 0
+        var minGreen = 0
+        var minRed = 0
+        for (game in record.results) {
+            if (game.blue > minBlue) {
+                minBlue = game.blue
+            }
+            if (game.green > minGreen) {
+                minGreen = game.green
+            }
+            if (game.red > minRed) {
+                minRed = game.red
+            }
+        }
+        return GameResult(minBlue, minGreen, minRed)
     }
 }
 
