@@ -1,6 +1,6 @@
 package com.landerer.aoc.day1
 
-import java.lang.RuntimeException
+import com.landerer.aoc.utils.readFileAsLines
 
 fun main() {
     val documents = arrayListOf("document.txt", "small_document_2.txt")
@@ -18,9 +18,3 @@ fun main() {
     }
 }
 
-private fun readFileAsLines(fileName: String): List<String> {
-    val classLoader = Thread.currentThread().contextClassLoader
-    val inputStream = classLoader.getResourceAsStream(fileName)
-    return inputStream?.bufferedReader()?.readLines()
-        ?: throw RuntimeException("Can't read file: $fileName")
-}
